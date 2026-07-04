@@ -700,7 +700,7 @@ function renderTeam(){
     </div>`;
   }
 
-  const totalR32=myTeam.reduce((s,p)=>s+p.r32pts,0);
+  const totalR32=myTeam.filter(p=>!p.bench).reduce((s,p)=>s+p.r32pts,0);
   const totalProj=starters.filter(p=>!p.elim).reduce((s,p)=>s+proj(p),0);
   document.getElementById('ts-r32').textContent=totalR32+' pts';
   document.getElementById('ts-proj').textContent=Math.round(totalProj)+' pts';
