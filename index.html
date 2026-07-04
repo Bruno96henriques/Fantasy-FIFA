@@ -143,6 +143,7 @@ body {
 .bfill { height: 100%; border-radius: 3px; transition: width .3s, background .3s; }
 
 /* ── TEAM GRID ── */
+.team-section { margin-top: 8px; }
 .formation {
   display: flex; flex-direction: column; gap: 10px;
   align-items: center;
@@ -185,6 +186,35 @@ body {
 }
 .bench-wrap { width: 100%; }
 
+/* ── FIXTURE TABLE ── */
+.fix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.fix-table th {
+  text-align: left; padding: 7px 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: #7D8590; border-bottom: 1px solid #30363D;
+}
+.fix-table td { padding: 9px 8px; border-bottom: 1px solid #1C2128; vertical-align: middle; }
+.fix-table tr:last-child td { border-bottom: none; }
+.fix-table tr.my-player { background: rgba(240,165,0,.05); }
+.fix-table tr.my-player td:first-child { border-left: 2px solid #F0A500; }
+.diff-bar {
+  display: inline-flex; gap: 2px; vertical-align: middle;
+}
+.diff-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ── TABS ── */
+.tabs { display: flex; border-bottom: 1px solid #30363D; background: #161B22; margin: 0 -16px 16px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; padding: 12px 16px; font-size: 13px; font-weight: 500;
+  background: none; border: none; color: #7D8590;
+  border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
+}
+.tab.on { color: #F0A500; border-bottom-color: #F0A500; }
+
+.pane { display: none; }
+.pane.on { display: block; }
+
 /* ── PLAYERS TABLE ── */
 .ptable-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .ptable { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -210,18 +240,6 @@ body {
 }
 .fsearch { flex: 2; min-width: 140px; background: #161B22; color: #E6EDF3; border: 1px solid #30363D; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
 .fsearch::placeholder { color: #484F58; }
-
-/* ── TABS ── */
-.tabs { display: flex; border-bottom: 1px solid #30363D; background: #161B22; margin: 0 -16px 16px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0; padding: 12px 16px; font-size: 13px; font-weight: 500;
-  background: none; border: none; color: #7D8590;
-  border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
-}
-.tab.on { color: #F0A500; border-bottom-color: #F0A500; }
-.pane { display: none; }
-.pane.on { display: block; }
 </style>
 </head>
 <body>
@@ -244,11 +262,12 @@ body {
     <button class="tab" onclick="showTab('fixtures')">📅 Jogos</button>
   </div>
 
-  <!-- TRANSFERÊNCIAS -->
+  <!-- ══ TRANSFERÊNCIAS ══ -->
   <div class="pane on" id="pane-transfers">
 
     <div class="section-label">Obrigatórias — substituir eliminados</div>
 
+    <!-- Brown OUT -->
     <div class="tcard">
       <div class="tcard-head">
         <div class="out-chip">🇩🇪 Brown <span class="elim-tag" style="margin-left:6px">ELIM</span></div>
@@ -264,6 +283,7 @@ body {
       </div>
     </div>
 
+    <!-- Nmecha OUT -->
     <div class="tcard">
       <div class="tcard-head">
         <div class="out-chip">🇩🇪 Nmecha <span class="elim-tag" style="margin-left:6px">ELIM</span></div>
@@ -281,6 +301,7 @@ body {
 
     <div class="section-label">Táticas — opcionais (tens 2 transferências grátis a mais)</div>
 
+    <!-- Tática 1 -->
     <div class="tcard">
       <div class="tcard-head">
         <select class="sel" id="sel-t1out" onchange="tactOut(1)" style="flex:1;margin:0">
@@ -295,6 +316,7 @@ body {
       <div class="preview" id="prev-t1" style="margin:10px 14px"></div>
     </div>
 
+    <!-- Tática 2 -->
     <div class="tcard">
       <div class="tcard-head">
         <select class="sel" id="sel-t2out" onchange="tactOut(2)" style="flex:1;margin:0">
@@ -309,20 +331,25 @@ body {
       <div class="preview" id="prev-t2" style="margin:10px 14px"></div>
     </div>
 
+    <!-- Budget -->
     <div class="budget-box">
       <div class="brow"><span class="bl">Brown + Nmecha libertam</span><span class="bv" style="color:#2EA043">+$10.3m</span></div>
       <div class="brow"><span class="bl">Budget existente</span><span class="bv">+$0.7m</span></div>
       <div class="brow"><span class="bl">Custo selecionado</span><span class="bv" id="b-cost" style="color:#DA3633">-$0.0m</span></div>
-      <div class="brow btotal"><span class="bl">Restante</span><span class="bv" id="b-rem">$11.0m</span></div>
+      <div class="brow btotal">
+        <span class="bl">Restante</span>
+        <span class="bv" id="b-rem">$11.0m</span>
+      </div>
       <div class="bbar"><div class="bfill" id="b-bar" style="width:100%;background:#2EA043"></div></div>
     </div>
 
+    <!-- Sugestões -->
     <div class="section-label">⭐ Melhores opções por fixture × forma</div>
     <div id="sugg"></div>
 
   </div>
 
-  <!-- EQUIPA -->
+  <!-- ══ EQUIPA ══ -->
   <div class="pane" id="pane-team">
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
       <div style="background:#161B22;border:1px solid #30363D;border-radius:8px;padding:10px 14px;flex:1;min-width:90px">
@@ -341,7 +368,7 @@ body {
     <div class="formation" id="formation"></div>
   </div>
 
-  <!-- JOGADORES -->
+  <!-- ══ JOGADORES ══ -->
   <div class="pane" id="pane-players">
     <div class="filters">
       <input class="fsearch" type="text" placeholder="🔍 Pesquisar..." id="fsearch" oninput="renderPTable()">
@@ -364,19 +391,22 @@ body {
     </table></div>
   </div>
 
-  <!-- JOGOS -->
+  <!-- ══ JOGOS ══ -->
   <div class="pane" id="pane-fixtures">
     <div style="font-size:12px;color:#7D8590;margin-bottom:12px">Dificuldade de clean sheet (🟢 fácil → 🔴 difícil). Ouro = tens jogadores.</div>
     <div id="fix-list"></div>
   </div>
 
-</div>
+</div><!-- .page -->
 
 <script>
-const F={BRA:'🇧🇷',NOR:'🇳🇴',FRA:'🇫🇷',PAR:'🇵🇾',MEX:'🇲🇽',ENG:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',POR:'🇵🇹',ESP:'🇪🇸',USA:'🇺🇸',BEL:'🇧🇪',ARG:'🇦🇷',EGY:'🇪🇬',SUI:'🇨🇭',COL:'🇨🇴',CAN:'🇨🇦',MAR:'🇲🇦',ALE:'🇩🇪'};
-const TN={BRA:'Brasil',NOR:'Noruega',FRA:'França',PAR:'Paraguai',MEX:'México',ENG:'Inglaterra',POR:'Portugal',ESP:'Espanha',USA:'EUA',BEL:'Bélgica',ARG:'Argentina',EGY:'Egito',SUI:'Suíça',COL:'Colômbia',CAN:'Canadá',MAR:'Marrocos',ALE:'Alemanha'};
+/* ════ DATA ════════════════════════════════════════════════════════ */
+const F = {BRA:'🇧🇷',NOR:'🇳🇴',FRA:'🇫🇷',PAR:'🇵🇾',MEX:'🇲🇽',ENG:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',POR:'🇵🇹',ESP:'🇪🇸',USA:'🇺🇸',BEL:'🇧🇪',ARG:'🇦🇷',EGY:'🇪🇬',SUI:'🇨🇭',COL:'🇨🇴',CAN:'🇨🇦',MAR:'🇲🇦',ALE:'🇩🇪'};
+const TN = {BRA:'Brasil',NOR:'Noruega',FRA:'França',PAR:'Paraguai',MEX:'México',ENG:'Inglaterra',POR:'Portugal',ESP:'Espanha',USA:'EUA',BEL:'Bélgica',ARG:'Argentina',EGY:'Egito',SUI:'Suíça',COL:'Colômbia',CAN:'Canadá',MAR:'Marrocos',ALE:'Alemanha'};
 
-const FIXTURES=[
+// Fixture: cs_diff = dificuldade clean sheet (do ponto de vista do ataque adversário)
+// 1=fácil(75% CS), 2=boa(60%), 3=média(40%), 4=fraca(20%), 5=difícil(8%)
+const FIXTURES = [
   {t1:'BRA',t2:'NOR',date:'5 Jul',cs1:3,cs2:4,atk1:4,atk2:3},
   {t1:'MEX',t2:'ENG',date:'5 Jul',cs1:3,cs2:4,atk1:3,atk2:4},
   {t1:'POR',t2:'ESP',date:'6 Jul',cs1:4,cs2:3,atk1:4,atk2:4},
@@ -387,145 +417,238 @@ const FIXTURES=[
   {t1:'CAN',t2:'MAR',date:'9 Jul',cs1:3,cs2:3,atk1:3,atk2:3},
 ];
 
-function fix(t){const f=FIXTURES.find(x=>x.t1===t||x.t2===t);if(!f)return null;return{opp:f.t1===t?f.t2:f.t1,date:f.date,cs:f.t1===t?f.cs1:f.cs2,atk:f.t1===t?f.atk1:f.atk2};}
-const csProb=[0,.75,.60,.40,.20,.08];
-const csLabel=['—','75%','60%','40%','20%','8%'];
-const dcol=['','#56d364','#7ee787','#e3b341','#f0883e','#da3633'];
-
-function proj(p,t){
-  const fx=fix(t||p.team);if(!fx)return 0;
-  const gp=Math.max(1,Math.round(p.mins/90));
-  const gpts=p.pos==='GK'||p.pos==='DEF'?6:p.pos==='MID'?5:4;
-  const atk=(p.goals/gp*gpts+p.assists/gp*3)*[0,1.6,1.3,1.0,0.65,0.35][fx.atk];
-  const cs=(p.pos==='GK'||p.pos==='DEF'?4:p.pos==='MID'?1:0)*csProb[fx.cs];
-  return Math.round((2+atk+cs-(p.yc/gp)*0.5)*10)/10;
+function fix(team){
+  const f = FIXTURES.find(x=>x.t1===team||x.t2===team);
+  if(!f) return null;
+  return {opp: f.t1===team?f.t2:f.t1, date:f.date, cs: f.t1===team?f.cs1:f.cs2, atk: f.t1===team?f.atk1:f.atk2};
 }
 
-const PLAYERS=[
-  {id:1,name:'Alisson',team:'BRA',pos:'GK',price:5.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:2,name:'Militão',team:'BRA',pos:'DEF',price:5.5,goals:1,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:3,name:'Danilo',team:'BRA',pos:'DEF',price:4.5,goals:0,assists:1,cs:2,yc:1,rc:0,mins:270},
-  {id:4,name:'Vinícius Jr',team:'BRA',pos:'MID',price:10.0,goals:3,assists:2,cs:0,yc:0,rc:0,mins:330},
-  {id:5,name:'Raphinha',team:'BRA',pos:'MID',price:8.0,goals:2,assists:2,cs:0,yc:0,rc:0,mins:315},
-  {id:6,name:'Paquetá',team:'BRA',pos:'MID',price:7.0,goals:1,assists:3,cs:0,yc:0,rc:0,mins:290},
-  {id:7,name:'Endrick',team:'BRA',pos:'FWD',price:7.5,goals:3,assists:0,cs:0,yc:0,rc:0,mins:240},
-  {id:8,name:'Nyland',team:'NOR',pos:'GK',price:4.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:9,name:'Ødegaard',team:'NOR',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:270},
-  {id:10,name:'Nusa',team:'NOR',pos:'MID',price:6.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:330},
-  {id:11,name:'Haaland',team:'NOR',pos:'FWD',price:10.5,goals:5,assists:0,cs:0,yc:0,rc:0,mins:300},
-  {id:12,name:'Sørloth',team:'NOR',pos:'FWD',price:6.0,goals:2,assists:1,cs:0,yc:0,rc:0,mins:240},
-  {id:13,name:'Maignan',team:'FRA',pos:'GK',price:5.0,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
-  {id:14,name:'T.Hernandez',team:'FRA',pos:'DEF',price:5.5,goals:0,assists:2,cs:3,yc:1,rc:0,mins:330},
-  {id:15,name:'Upamecano',team:'FRA',pos:'DEF',price:5.0,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
-  {id:16,name:'Olise',team:'FRA',pos:'MID',price:9.5,goals:1,assists:5,cs:0,yc:0,rc:0,mins:360},
-  {id:17,name:'Camavinga',team:'FRA',pos:'MID',price:6.5,goals:0,assists:1,cs:0,yc:0,rc:0,mins:300},
-  {id:18,name:'Barcola',team:'FRA',pos:'MID',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:290},
-  {id:19,name:'Mbappé',team:'FRA',pos:'FWD',price:10.5,goals:6,assists:2,cs:0,yc:0,rc:0,mins:360},
-  {id:20,name:'Gill',team:'PAR',pos:'GK',price:4.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:21,name:'Enciso',team:'PAR',pos:'MID',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:330},
-  {id:22,name:'Almirón',team:'PAR',pos:'MID',price:6.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:350},
-  {id:23,name:'Sanabria',team:'PAR',pos:'FWD',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:280},
-  {id:24,name:'Ochoa',team:'MEX',pos:'GK',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:300},
-  {id:25,name:'Araujo',team:'MEX',pos:'DEF',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:26,name:'H.Lozano',team:'MEX',pos:'MID',price:6.0,goals:2,assists:1,cs:0,yc:0,rc:0,mins:310},
-  {id:27,name:'Jiménez',team:'MEX',pos:'FWD',price:6.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:300},
-  {id:28,name:'Pickford',team:'ENG',pos:'GK',price:4.8,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:29,name:'Konsa',team:'ENG',pos:'DEF',price:4.8,goals:0,assists:0,cs:1,yc:0,rc:0,mins:300},
-  {id:30,name:'T-Arnold',team:'ENG',pos:'DEF',price:7.0,goals:0,assists:2,cs:1,yc:0,rc:0,mins:360},
-  {id:31,name:'Bellingham',team:'ENG',pos:'MID',price:8.3,goals:2,assists:1,cs:0,yc:0,rc:0,mins:360},
-  {id:32,name:'Saka',team:'ENG',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
-  {id:33,name:'Foden',team:'ENG',pos:'MID',price:8.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:280},
-  {id:34,name:'Kane',team:'ENG',pos:'FWD',price:9.0,goals:5,assists:1,cs:0,yc:0,rc:0,mins:360},
-  {id:35,name:'D.Costa',team:'POR',pos:'GK',price:5.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:36,name:'R.Dias',team:'POR',pos:'DEF',price:6.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:37,name:'N.Mendes',team:'POR',pos:'DEF',price:5.5,goals:0,assists:1,cs:1,yc:0,rc:0,mins:330},
-  {id:38,name:'B.Fernandes',team:'POR',pos:'MID',price:9.0,goals:2,assists:2,cs:0,yc:1,rc:0,mins:360},
-  {id:39,name:'Leão',team:'POR',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
-  {id:40,name:'Félix',team:'POR',pos:'MID',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:310},
-  {id:41,name:'Unai Simón',team:'ESP',pos:'GK',price:4.5,goals:0,assists:0,cs:4,yc:0,rc:0,mins:360},
-  {id:42,name:'Cucurella',team:'ESP',pos:'DEF',price:5.1,goals:0,assists:1,cs:4,yc:0,rc:0,mins:360},
-  {id:43,name:'Le Normand',team:'ESP',pos:'DEF',price:5.0,goals:0,assists:0,cs:4,yc:0,rc:0,mins:360},
-  {id:44,name:'Pedri',team:'ESP',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
-  {id:45,name:'Gavi',team:'ESP',pos:'MID',price:7.0,goals:0,assists:1,cs:0,yc:1,rc:0,mins:280},
-  {id:46,name:'Yamal',team:'ESP',pos:'MID',price:10.0,goals:2,assists:3,cs:0,yc:0,rc:0,mins:360},
-  {id:47,name:'Oyarzabal',team:'ESP',pos:'FWD',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:300},
-  {id:48,name:'Turner',team:'USA',pos:'GK',price:4.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:270},
-  {id:49,name:'Dest',team:'USA',pos:'DEF',price:4.3,goals:0,assists:1,cs:2,yc:0,rc:0,mins:360},
-  {id:50,name:'McKenzie',team:'USA',pos:'DEF',price:4.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:51,name:'Pulisic',team:'USA',pos:'MID',price:7.0,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
-  {id:52,name:'McKennie',team:'USA',pos:'MID',price:5.5,goals:0,assists:1,cs:0,yc:1,rc:0,mins:310},
-  {id:53,name:'Balogun',team:'USA',pos:'FWD',price:6.0,goals:2,assists:0,cs:0,yc:0,rc:1,mins:280},
-  {id:54,name:'Courtois',team:'BEL',pos:'GK',price:5.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:55,name:'Castagne',team:'BEL',pos:'DEF',price:5.0,goals:0,assists:1,cs:2,yc:0,rc:0,mins:330},
-  {id:56,name:'De Bruyne',team:'BEL',pos:'MID',price:9.5,goals:1,assists:3,cs:0,yc:0,rc:0,mins:330},
-  {id:57,name:'Doku',team:'BEL',pos:'MID',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:320},
-  {id:58,name:'Lukaku',team:'BEL',pos:'FWD',price:8.0,goals:3,assists:1,cs:0,yc:0,rc:0,mins:300},
-  {id:59,name:'E.Martínez',team:'ARG',pos:'GK',price:5.0,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
-  {id:60,name:'Molina',team:'ARG',pos:'DEF',price:4.4,goals:0,assists:2,cs:3,yc:0,rc:0,mins:360},
-  {id:61,name:'Romero',team:'ARG',pos:'DEF',price:6.0,goals:0,assists:0,cs:3,yc:1,rc:0,mins:360},
-  {id:62,name:'L.Martínez',team:'ARG',pos:'DEF',price:5.5,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
+const csProb  = [0,.75,.60,.40,.20,.08];
+const csLabel = ['—','75%','60%','40%','20%','8%'];
+const dcol    = ['','#56d364','#7ee787','#e3b341','#f0883e','#da3633'];
+
+function proj(p, t){
+  const fx = fix(t||p.team);
+  if(!fx) return 0;
+  const gp = Math.max(1, Math.round(p.mins/90));
+  const gpts = p.pos==='GK'||p.pos==='DEF'?6:p.pos==='MID'?5:4;
+  const atk = (p.goals/gp*gpts + p.assists/gp*3) * [0,1.6,1.3,1.0,0.65,0.35][fx.atk];
+  const cs  = (p.pos==='GK'||p.pos==='DEF'?4:p.pos==='MID'?1:0) * csProb[fx.cs];
+  const ded = (p.yc/gp)*0.5;
+  return Math.round((2 + atk + cs - ded)*10)/10;
+}
+
+// Players database (140 players across 16 R16 teams)
+const PLAYERS = [
+  // BRASIL
+  {id:1, name:'Alisson',     team:'BRA',pos:'GK', price:5.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:2, name:'Militão',     team:'BRA',pos:'DEF',price:5.5,goals:1,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:3, name:'Danilo',      team:'BRA',pos:'DEF',price:4.5,goals:0,assists:1,cs:2,yc:1,rc:0,mins:270},
+  {id:4, name:'Vinícius Jr', team:'BRA',pos:'MID',price:10.0,goals:3,assists:2,cs:0,yc:0,rc:0,mins:330},
+  {id:5, name:'Raphinha',    team:'BRA',pos:'MID',price:8.0,goals:2,assists:2,cs:0,yc:0,rc:0,mins:315},
+  {id:6, name:'Paquetá',     team:'BRA',pos:'MID',price:7.0,goals:1,assists:3,cs:0,yc:0,rc:0,mins:290},
+  {id:7, name:'Endrick',     team:'BRA',pos:'FWD',price:7.5,goals:3,assists:0,cs:0,yc:0,rc:0,mins:240},
+  // NORUEGA
+  {id:8, name:'Nyland',      team:'NOR',pos:'GK', price:4.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:9, name:'Ødegaard',    team:'NOR',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:270},
+  {id:10,name:'Nusa',        team:'NOR',pos:'MID',price:6.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:330},
+  {id:11,name:'Haaland',     team:'NOR',pos:'FWD',price:10.5,goals:5,assists:0,cs:0,yc:0,rc:0,mins:300},
+  {id:12,name:'Sørloth',     team:'NOR',pos:'FWD',price:6.0,goals:2,assists:1,cs:0,yc:0,rc:0,mins:240},
+  // FRANÇA
+  {id:13,name:'Maignan',     team:'FRA',pos:'GK', price:5.0,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
+  {id:14,name:'T.Hernandez', team:'FRA',pos:'DEF',price:5.5,goals:0,assists:2,cs:3,yc:1,rc:0,mins:330},
+  {id:15,name:'Upamecano',   team:'FRA',pos:'DEF',price:5.0,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
+  {id:16,name:'Olise',       team:'FRA',pos:'MID',price:9.5,goals:1,assists:5,cs:0,yc:0,rc:0,mins:360},
+  {id:17,name:'Camavinga',   team:'FRA',pos:'MID',price:6.5,goals:0,assists:1,cs:0,yc:0,rc:0,mins:300},
+  {id:18,name:'Barcola',     team:'FRA',pos:'MID',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:290},
+  {id:19,name:'Mbappé',      team:'FRA',pos:'FWD',price:10.5,goals:6,assists:2,cs:0,yc:0,rc:0,mins:360},
+  // PARAGUAI
+  {id:20,name:'Gill',        team:'PAR',pos:'GK', price:4.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:21,name:'Enciso',      team:'PAR',pos:'MID',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:330},
+  {id:22,name:'Almirón',     team:'PAR',pos:'MID',price:6.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:350},
+  {id:23,name:'Sanabria',    team:'PAR',pos:'FWD',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:280},
+  // MÉXICO
+  {id:24,name:'Ochoa',       team:'MEX',pos:'GK', price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:300},
+  {id:25,name:'Araujo',      team:'MEX',pos:'DEF',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:26,name:'H.Lozano',    team:'MEX',pos:'MID',price:6.0,goals:2,assists:1,cs:0,yc:0,rc:0,mins:310},
+  {id:27,name:'Jiménez',     team:'MEX',pos:'FWD',price:6.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:300},
+  // INGLATERRA
+  {id:28,name:'Pickford',    team:'ENG',pos:'GK', price:4.8,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:29,name:'Konsa',       team:'ENG',pos:'DEF',price:4.8,goals:0,assists:0,cs:1,yc:0,rc:0,mins:300},
+  {id:30,name:'T-Arnold',    team:'ENG',pos:'DEF',price:7.0,goals:0,assists:2,cs:1,yc:0,rc:0,mins:360},
+  {id:31,name:'Bellingham',  team:'ENG',pos:'MID',price:8.3,goals:2,assists:1,cs:0,yc:0,rc:0,mins:360},
+  {id:32,name:'Saka',        team:'ENG',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
+  {id:33,name:'Foden',       team:'ENG',pos:'MID',price:8.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:280},
+  {id:34,name:'Kane',        team:'ENG',pos:'FWD',price:9.0,goals:5,assists:1,cs:0,yc:0,rc:0,mins:360},
+  // PORTUGAL
+  {id:35,name:'D.Costa',     team:'POR',pos:'GK', price:5.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:36,name:'R.Dias',      team:'POR',pos:'DEF',price:6.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:37,name:'N.Mendes',    team:'POR',pos:'DEF',price:5.5,goals:0,assists:1,cs:1,yc:0,rc:0,mins:330},
+  {id:38,name:'B.Fernandes', team:'POR',pos:'MID',price:9.0,goals:2,assists:2,cs:0,yc:1,rc:0,mins:360},
+  {id:39,name:'Leão',        team:'POR',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
+  {id:40,name:'Félix',       team:'POR',pos:'MID',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:310},
+  // ESPANHA
+  {id:41,name:'Unai Simón',  team:'ESP',pos:'GK', price:4.5,goals:0,assists:0,cs:4,yc:0,rc:0,mins:360},
+  {id:42,name:'Cucurella',   team:'ESP',pos:'DEF',price:5.1,goals:0,assists:1,cs:4,yc:0,rc:0,mins:360},
+  {id:43,name:'Le Normand',  team:'ESP',pos:'DEF',price:5.0,goals:0,assists:0,cs:4,yc:0,rc:0,mins:360},
+  {id:44,name:'Pedri',       team:'ESP',pos:'MID',price:8.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
+  {id:45,name:'Gavi',        team:'ESP',pos:'MID',price:7.0,goals:0,assists:1,cs:0,yc:1,rc:0,mins:280},
+  {id:46,name:'Yamal',       team:'ESP',pos:'MID',price:10.0,goals:2,assists:3,cs:0,yc:0,rc:0,mins:360},
+  {id:47,name:'Oyarzabal',   team:'ESP',pos:'FWD',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:300},
+  // EUA
+  {id:48,name:'Turner',      team:'USA',pos:'GK', price:4.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:270},
+  {id:49,name:'Dest',        team:'USA',pos:'DEF',price:4.3,goals:0,assists:1,cs:2,yc:0,rc:0,mins:360},
+  {id:50,name:'McKenzie',    team:'USA',pos:'DEF',price:4.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:51,name:'Pulisic',     team:'USA',pos:'MID',price:7.0,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330},
+  {id:52,name:'McKennie',    team:'USA',pos:'MID',price:5.5,goals:0,assists:1,cs:0,yc:1,rc:0,mins:310},
+  {id:53,name:'Balogun',     team:'USA',pos:'FWD',price:6.0,goals:2,assists:0,cs:0,yc:0,rc:1,mins:280},
+  // BÉLGICA
+  {id:54,name:'Courtois',    team:'BEL',pos:'GK', price:5.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:55,name:'Castagne',    team:'BEL',pos:'DEF',price:5.0,goals:0,assists:1,cs:2,yc:0,rc:0,mins:330},
+  {id:56,name:'De Bruyne',   team:'BEL',pos:'MID',price:9.5,goals:1,assists:3,cs:0,yc:0,rc:0,mins:330},
+  {id:57,name:'Doku',        team:'BEL',pos:'MID',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:320},
+  {id:58,name:'Lukaku',      team:'BEL',pos:'FWD',price:8.0,goals:3,assists:1,cs:0,yc:0,rc:0,mins:300},
+  // ARGENTINA
+  {id:59,name:'E.Martínez',  team:'ARG',pos:'GK', price:5.0,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
+  {id:60,name:'Molina',      team:'ARG',pos:'DEF',price:4.4,goals:0,assists:2,cs:3,yc:0,rc:0,mins:360},
+  {id:61,name:'Romero',      team:'ARG',pos:'DEF',price:6.0,goals:0,assists:0,cs:3,yc:1,rc:0,mins:360},
+  {id:62,name:'L.Martínez',  team:'ARG',pos:'DEF',price:5.5,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
   {id:63,name:'Mac Allister',team:'ARG',pos:'MID',price:7.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:340},
-  {id:64,name:'E.Fernández',team:'ARG',pos:'MID',price:7.5,goals:0,assists:2,cs:0,yc:1,rc:0,mins:330},
-  {id:65,name:'Messi',team:'ARG',pos:'FWD',price:10.0,goals:7,assists:3,cs:0,yc:0,rc:0,mins:340},
-  {id:66,name:'Lautaro',team:'ARG',pos:'FWD',price:8.5,goals:3,assists:1,cs:0,yc:0,rc:0,mins:320},
-  {id:67,name:'J.Álvarez',team:'ARG',pos:'FWD',price:7.5,goals:2,assists:2,cs:0,yc:0,rc:0,mins:290},
-  {id:68,name:'El-Shenawy',team:'EGY',pos:'GK',price:4.0,goals:0,assists:0,cs:0,yc:0,rc:0,mins:360},
-  {id:69,name:'Salah',team:'EGY',pos:'MID',price:8.5,goals:2,assists:3,cs:0,yc:0,rc:0,mins:360},
-  {id:70,name:'M.Mohamed',team:'EGY',pos:'FWD',price:5.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:310},
-  {id:71,name:'Kobel',team:'SUI',pos:'GK',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:72,name:'Akanji',team:'SUI',pos:'DEF',price:5.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:73,name:'Xhaka',team:'SUI',pos:'MID',price:6.0,goals:0,assists:1,cs:0,yc:1,rc:0,mins:360},
-  {id:74,name:'Ndoye',team:'SUI',pos:'MID',price:6.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:330},
-  {id:75,name:'Embolo',team:'SUI',pos:'FWD',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:290},
-  {id:76,name:'Vargas',team:'COL',pos:'GK',price:4.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:77,name:'Muñoz',team:'COL',pos:'DEF',price:5.0,goals:2,assists:0,cs:2,yc:0,rc:0,mins:360},
-  {id:78,name:'L.Díaz',team:'COL',pos:'MID',price:8.1,goals:1,assists:1,cs:0,yc:0,rc:0,mins:360},
-  {id:79,name:'Arias',team:'COL',pos:'MID',price:6.0,goals:2,assists:0,cs:0,yc:0,rc:0,mins:340},
-  {id:80,name:'James R.',team:'COL',pos:'MID',price:7.0,goals:0,assists:2,cs:0,yc:0,rc:0,mins:300},
-  {id:81,name:'Cucho H.',team:'COL',pos:'FWD',price:5.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:270},
-  {id:82,name:'Crepeau',team:'CAN',pos:'GK',price:4.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:270},
-  {id:83,name:'Davies',team:'CAN',pos:'DEF',price:8.0,goals:0,assists:2,cs:1,yc:0,rc:0,mins:360},
-  {id:84,name:'Johnston',team:'CAN',pos:'DEF',price:5.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:85,name:'Buchanan',team:'CAN',pos:'MID',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:310},
-  {id:86,name:'David',team:'CAN',pos:'FWD',price:6.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:330},
-  {id:87,name:'Bono',team:'MAR',pos:'GK',price:4.7,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:88,name:'Hakimi',team:'MAR',pos:'DEF',price:6.0,goals:0,assists:2,cs:1,yc:1,rc:0,mins:360},
-  {id:89,name:'Mazraoui',team:'MAR',pos:'DEF',price:5.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
-  {id:90,name:'Ziyech',team:'MAR',pos:'MID',price:7.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:310},
-  {id:91,name:'En-Nesyri',team:'MAR',pos:'FWD',price:7.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:330},
+  {id:64,name:'E.Fernández', team:'ARG',pos:'MID',price:7.5,goals:0,assists:2,cs:0,yc:1,rc:0,mins:330},
+  {id:65,name:'Messi',       team:'ARG',pos:'FWD',price:10.0,goals:7,assists:3,cs:0,yc:0,rc:0,mins:340},
+  {id:66,name:'Lautaro',     team:'ARG',pos:'FWD',price:8.5,goals:3,assists:1,cs:0,yc:0,rc:0,mins:320},
+  {id:67,name:'J.Álvarez',   team:'ARG',pos:'FWD',price:7.5,goals:2,assists:2,cs:0,yc:0,rc:0,mins:290},
+  // EGITO
+  {id:68,name:'El-Shenawy',  team:'EGY',pos:'GK', price:4.0,goals:0,assists:0,cs:0,yc:0,rc:0,mins:360},
+  {id:69,name:'Salah',       team:'EGY',pos:'MID',price:8.5,goals:2,assists:3,cs:0,yc:0,rc:0,mins:360},
+  {id:70,name:'M.Mohamed',   team:'EGY',pos:'FWD',price:5.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:310},
+  // SUÍÇA
+  {id:71,name:'Kobel',       team:'SUI',pos:'GK', price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:72,name:'Akanji',      team:'SUI',pos:'DEF',price:5.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:73,name:'Xhaka',       team:'SUI',pos:'MID',price:6.0,goals:0,assists:1,cs:0,yc:1,rc:0,mins:360},
+  {id:74,name:'Ndoye',       team:'SUI',pos:'MID',price:6.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:330},
+  {id:75,name:'Embolo',      team:'SUI',pos:'FWD',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:290},
+  // COLÔMBIA
+  {id:76,name:'Vargas',      team:'COL',pos:'GK', price:4.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:77,name:'Muñoz',       team:'COL',pos:'DEF',price:5.0,goals:2,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:78,name:'L.Díaz',      team:'COL',pos:'MID',price:8.1,goals:1,assists:1,cs:0,yc:0,rc:0,mins:360},
+  {id:79,name:'Arias',       team:'COL',pos:'MID',price:6.0,goals:2,assists:0,cs:0,yc:0,rc:0,mins:340},
+  {id:80,name:'James R.',    team:'COL',pos:'MID',price:7.0,goals:0,assists:2,cs:0,yc:0,rc:0,mins:300},
+  {id:81,name:'Cucho H.',    team:'COL',pos:'FWD',price:5.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:270},
+  // CANADÁ
+  {id:82,name:'Crepeau',     team:'CAN',pos:'GK', price:4.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:270},
+  {id:83,name:'Davies',      team:'CAN',pos:'DEF',price:8.0,goals:0,assists:2,cs:1,yc:0,rc:0,mins:360},
+  {id:84,name:'Johnston',    team:'CAN',pos:'DEF',price:5.0,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:85,name:'Buchanan',    team:'CAN',pos:'MID',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:310},
+  {id:86,name:'David',       team:'CAN',pos:'FWD',price:6.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:330},
+  // MARROCOS
+  {id:87,name:'Bono',        team:'MAR',pos:'GK', price:4.7,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:88,name:'Hakimi',      team:'MAR',pos:'DEF',price:6.0,goals:0,assists:2,cs:1,yc:1,rc:0,mins:360},
+  {id:89,name:'Mazraoui',    team:'MAR',pos:'DEF',price:5.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:90,name:'Ziyech',      team:'MAR',pos:'MID',price:7.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:310},
+  {id:91,name:'En-Nesyri',   team:'MAR',pos:'FWD',price:7.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:330},
+  // BRASIL (extra)
+  {id:201,name:'Carlos Augusto',team:'BRA',pos:'DEF',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:270},
+  {id:202,name:'Jesus',         team:'BRA',pos:'FWD',price:7.5,goals:2,assists:1,cs:0,yc:0,rc:0,mins:300},
+  // NORUEGA (extra)
+  {id:203,name:'Ajer',          team:'NOR',pos:'DEF',price:4.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:204,name:'Elyounoussi',   team:'NOR',pos:'MID',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:280},
+  {id:205,name:'Wood',          team:'NOR',pos:'FWD',price:6.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:250},
+  // FRANÇA (extra)
+  {id:206,name:'Saliba',        team:'FRA',pos:'DEF',price:5.5,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360},
+  {id:207,name:'Coman',         team:'FRA',pos:'MID',price:6.0,goals:1,assists:1,cs:0,yc:0,rc:0,mins:270},
+  {id:208,name:'Dembélé',       team:'FRA',pos:'FWD',price:8.0,goals:1,assists:2,cs:0,yc:0,rc:0,mins:300},
+  {id:209,name:'Thuram',        team:'FRA',pos:'FWD',price:7.5,goals:2,assists:0,cs:0,yc:0,rc:0,mins:310},
+  // PARAGUAI (extra)
+  {id:210,name:'Villalba',      team:'PAR',pos:'DEF',price:4.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:211,name:'Tejeda',        team:'PAR',pos:'MID',price:5.0,goals:0,assists:0,cs:0,yc:0,rc:0,mins:300},
+  {id:212,name:'Valdez',        team:'PAR',pos:'FWD',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:260},
+  // MÉXICO (extra)
+  {id:213,name:'Montes',        team:'MEX',pos:'DEF',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:214,name:'Herrera',       team:'MEX',pos:'MID',price:5.0,goals:0,assists:1,cs:0,yc:0,rc:0,mins:290},
+  {id:215,name:'Giménez',       team:'MEX',pos:'FWD',price:7.0,goals:3,assists:0,cs:0,yc:0,rc:0,mins:300},
+  {id:216,name:'Vela',          team:'MEX',pos:'FWD',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:260},
+  // INGLATERRA (extra)
+  {id:217,name:'Guehi',         team:'ENG',pos:'DEF',price:4.5,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360},
+  {id:218,name:'Trippier',      team:'ENG',pos:'DEF',price:5.0,goals:0,assists:1,cs:1,yc:0,rc:0,mins:280},
+  {id:219,name:'Rashford',      team:'ENG',pos:'FWD',price:8.0,goals:2,assists:1,cs:0,yc:0,rc:0,mins:280},
+  {id:220,name:'Watkins',       team:'ENG',pos:'FWD',price:7.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:200},
+  // PORTUGAL (extra)
+  {id:221,name:'Dalot',         team:'POR',pos:'DEF',price:5.0,goals:0,assists:1,cs:1,yc:0,rc:0,mins:330},
+  {id:222,name:'Guedes',        team:'POR',pos:'MID',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:260},
+  // ESPANHA (extra)
+  {id:223,name:'Carvajal',      team:'ESP',pos:'DEF',price:5.5,goals:0,assists:1,cs:4,yc:0,rc:0,mins:330},
+  {id:224,name:'Zubimendi',     team:'ESP',pos:'MID',price:5.5,goals:0,assists:0,cs:0,yc:0,rc:0,mins:300},
+  {id:225,name:'Merino',        team:'ESP',pos:'MID',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:280},
+  {id:226,name:'Williams',      team:'ESP',pos:'FWD',price:6.5,goals:1,assists:2,cs:0,yc:0,rc:0,mins:290},
+  {id:227,name:'Morata',        team:'ESP',pos:'FWD',price:7.0,goals:2,assists:1,cs:0,yc:1,rc:0,mins:310},
+  // EUA (extra)
+  {id:228,name:'Adams',         team:'USA',pos:'MID',price:5.5,goals:0,assists:1,cs:0,yc:1,rc:0,mins:330},
+  {id:229,name:'Pepi',          team:'USA',pos:'FWD',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:240},
+  // BÉLGICA (extra)
+  {id:230,name:'Theate',        team:'BEL',pos:'DEF',price:4.5,goals:0,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:231,name:'Onana',         team:'BEL',pos:'MID',price:5.5,goals:0,assists:0,cs:0,yc:1,rc:0,mins:330},
+  {id:232,name:'Trossard',      team:'BEL',pos:'MID',price:6.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:280},
+  // ARGENTINA (extra)
+  {id:233,name:'Foyth',         team:'ARG',pos:'DEF',price:4.5,goals:0,assists:1,cs:3,yc:0,rc:0,mins:300},
+  {id:234,name:'Lo Celso',      team:'ARG',pos:'MID',price:5.5,goals:0,assists:1,cs:0,yc:0,rc:0,mins:250},
+  {id:235,name:'De Paul',       team:'ARG',pos:'MID',price:6.5,goals:0,assists:1,cs:0,yc:1,rc:0,mins:320},
+  // EGITO (extra)
+  {id:236,name:'Omar Kamal',    team:'EGY',pos:'DEF',price:4.0,goals:0,assists:0,cs:0,yc:0,rc:0,mins:360},
+  {id:237,name:'Hamdi Fathi',   team:'EGY',pos:'MID',price:4.5,goals:0,assists:0,cs:0,yc:0,rc:0,mins:330},
+  {id:238,name:'Marwan Hamdy',  team:'EGY',pos:'FWD',price:5.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:260},
+  // SUÍÇA (extra)
+  {id:239,name:'Schär',         team:'SUI',pos:'DEF',price:4.5,goals:1,assists:0,cs:2,yc:0,rc:0,mins:360},
+  {id:240,name:'Shaqiri',       team:'SUI',pos:'MID',price:5.5,goals:1,assists:1,cs:0,yc:0,rc:0,mins:280},
+  {id:241,name:'Okafor',        team:'SUI',pos:'MID',price:5.5,goals:1,assists:0,cs:0,yc:0,rc:0,mins:270},
+  // COLÔMBIA (extra)
+  {id:242,name:'Moreno',        team:'COL',pos:'DEF',price:4.0,goals:0,assists:0,cs:2,yc:0,rc:0,mins:270},
+  {id:243,name:'Lerma',         team:'COL',pos:'MID',price:5.0,goals:0,assists:0,cs:0,yc:1,rc:0,mins:330},
+  {id:244,name:'Borré',         team:'COL',pos:'FWD',price:6.0,goals:1,assists:0,cs:0,yc:0,rc:0,mins:280},
+  // CANADÁ (extra)
+  {id:245,name:'Laryea',        team:'CAN',pos:'DEF',price:4.5,goals:0,assists:1,cs:1,yc:0,rc:0,mins:300},
+  {id:246,name:'Osorio',        team:'CAN',pos:'MID',price:5.5,goals:0,assists:1,cs:0,yc:0,rc:0,mins:300},
+  // MARROCOS (extra)
+  {id:247,name:'Ait Nouri',     team:'MAR',pos:'DEF',price:4.5,goals:0,assists:1,cs:1,yc:0,rc:0,mins:310},
+  {id:248,name:'Amrabat',       team:'MAR',pos:'MID',price:5.5,goals:0,assists:0,cs:0,yc:1,rc:0,mins:330},
+  {id:249,name:'Sabiri',        team:'MAR',pos:'MID',price:5.0,goals:0,assists:1,cs:0,yc:0,rc:0,mins:280},
 ];
 
-let myTeam=[
-  {id:92,name:'Martínez',team:'ARG',pos:'GK',price:5.0,r32pts:2,goals:0,assists:0,cs:3,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
-  {id:93,name:'Dest',team:'USA',pos:'DEF',price:4.3,r32pts:10,goals:0,assists:1,cs:2,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
-  {id:94,name:'Cucurella',team:'ESP',pos:'DEF',price:5.1,r32pts:13,goals:0,assists:1,cs:4,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
-  {id:95,name:'Molina',team:'ARG',pos:'DEF',price:4.4,r32pts:1,goals:0,assists:2,cs:3,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
-  {id:96,name:'Díaz',team:'COL',pos:'MID',price:8.1,r32pts:3,goals:1,assists:1,cs:0,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
-  {id:97,name:'Pulisic',team:'USA',pos:'MID',price:7.0,r32pts:3,goals:1,assists:2,cs:0,yc:0,rc:0,mins:330,elim:false,cap:false,vc:false,bench:false},
-  {id:98,name:'Olise',team:'FRA',pos:'MID',price:9.5,r32pts:10,goals:1,assists:5,cs:0,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
-  {id:99,name:'Yamal',team:'ESP',pos:'MID',price:10.0,r32pts:3,goals:2,assists:3,cs:0,yc:0,rc:0,mins:360,elim:false,cap:false,vc:true,bench:false},
-  {id:100,name:'Messi',team:'ARG',pos:'FWD',price:10.0,r32pts:10,goals:7,assists:3,cs:0,yc:0,rc:0,mins:340,elim:false,cap:false,vc:false,bench:false},
-  {id:101,name:'Haaland',team:'NOR',pos:'FWD',price:10.5,r32pts:8,goals:5,assists:0,cs:0,yc:0,rc:0,mins:300,elim:false,cap:false,vc:false,bench:false},
-  {id:102,name:'Mbappé',team:'FRA',pos:'FWD',price:10.5,r32pts:28,goals:6,assists:2,cs:0,yc:0,rc:0,mins:360,elim:false,cap:true,vc:false,bench:false},
-  {id:103,name:'Pickford',team:'ENG',pos:'GK',price:4.8,r32pts:2,goals:0,assists:0,cs:1,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:true},
-  {id:104,name:'Brown',team:'ALE',pos:'DEF',price:4.7,r32pts:2,goals:0,assists:0,cs:0,yc:0,rc:0,mins:270,elim:true,cap:false,vc:false,bench:true},
-  {id:105,name:'Nmecha',team:'ALE',pos:'MID',price:5.6,r32pts:1,goals:0,assists:0,cs:0,yc:0,rc:0,mins:270,elim:true,cap:false,vc:false,bench:true},
-  {id:106,name:'Konsa',team:'ENG',pos:'DEF',price:4.8,r32pts:2,goals:0,assists:0,cs:1,yc:0,rc:0,mins:300,elim:false,cap:false,vc:false,bench:true},
+// A tua equipa com pontos reais do R32
+let myTeam = [
+  // Titulares
+  {id:92, name:'Martínez',  team:'ARG',pos:'GK', price:5.0, r32pts:2,  goals:0,assists:0,cs:3,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
+  {id:93, name:'Dest',      team:'USA',pos:'DEF',price:4.3, r32pts:10, goals:0,assists:1,cs:2,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
+  {id:94, name:'Cucurella', team:'ESP',pos:'DEF',price:5.1, r32pts:13, goals:0,assists:1,cs:4,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
+  {id:95, name:'Molina',    team:'ARG',pos:'DEF',price:4.4, r32pts:1,  goals:0,assists:2,cs:3,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
+  {id:96, name:'Díaz',      team:'COL',pos:'MID',price:8.1, r32pts:3,  goals:1,assists:1,cs:0,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
+  {id:97, name:'Pulisic',   team:'USA',pos:'MID',price:7.0, r32pts:3,  goals:1,assists:2,cs:0,yc:0,rc:0,mins:330,elim:false,cap:false,vc:false,bench:false},
+  {id:98, name:'Olise',     team:'FRA',pos:'MID',price:9.5, r32pts:10, goals:1,assists:5,cs:0,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:false},
+  {id:99, name:'Yamal',     team:'ESP',pos:'MID',price:10.0,r32pts:3,  goals:2,assists:3,cs:0,yc:0,rc:0,mins:360,elim:false,cap:false,vc:true, bench:false},
+  {id:100,name:'Messi',     team:'ARG',pos:'FWD',price:10.0,r32pts:10, goals:7,assists:3,cs:0,yc:0,rc:0,mins:340,elim:false,cap:false,vc:false,bench:false},
+  {id:101,name:'Haaland',   team:'NOR',pos:'FWD',price:10.5,r32pts:8,  goals:5,assists:0,cs:0,yc:0,rc:0,mins:300,elim:false,cap:false,vc:false,bench:false},
+  {id:102,name:'Mbappé',    team:'FRA',pos:'FWD',price:10.5,r32pts:28, goals:6,assists:2,cs:0,yc:0,rc:0,mins:360,elim:false,cap:true, vc:false,bench:false},
+  // Banco
+  {id:103,name:'Pickford',  team:'ENG',pos:'GK', price:4.8, r32pts:2,  goals:0,assists:0,cs:1,yc:0,rc:0,mins:360,elim:false,cap:false,vc:false,bench:true},
+  {id:104,name:'Brown',     team:'ALE',pos:'DEF',price:4.7, r32pts:2,  goals:0,assists:0,cs:0,yc:0,rc:0,mins:270,elim:true, cap:false,vc:false,bench:true},
+  {id:105,name:'Nmecha',    team:'ALE',pos:'MID',price:5.6, r32pts:1,  goals:0,assists:0,cs:0,yc:0,rc:0,mins:270,elim:true, cap:false,vc:false,bench:true},
+  {id:106,name:'Konsa',     team:'ENG',pos:'DEF',price:4.8, r32pts:2,  goals:0,assists:0,cs:1,yc:0,rc:0,mins:300,elim:false,cap:false,vc:false,bench:true},
 ];
 
-const INITIAL_BUDGET=11.0;
-const sel={brown:null,nmecha:null,t1out:null,t1in:null,t2out:null,t2in:null};
+const INITIAL_BUDGET = 11.0;
+const sel = {brown:null, nmecha:null, t1out:null, t1in:null, t2out:null, t2in:null};
 
+/* ════ BUDGET ══════════════════════════════════════════════════════ */
 function budgetSpent(){
   let s=0;
-  if(sel.brown){const p=PLAYERS.find(x=>x.id===sel.brown);if(p)s+=p.price;}
-  if(sel.nmecha){const p=PLAYERS.find(x=>x.id===sel.nmecha);if(p)s+=p.price;}
-  if(sel.t1out&&sel.t1in){const o=myTeam.find(x=>x.id===sel.t1out),i=PLAYERS.find(x=>x.id===sel.t1in);if(o&&i)s+=(i.price-o.price);}
-  if(sel.t2out&&sel.t2in){const o=myTeam.find(x=>x.id===sel.t2out),i=PLAYERS.find(x=>x.id===sel.t2in);if(o&&i)s+=(i.price-o.price);}
+  if(sel.brown){  const p=PLAYERS.find(x=>x.id===sel.brown);  if(p) s+=p.price; }
+  if(sel.nmecha){ const p=PLAYERS.find(x=>x.id===sel.nmecha); if(p) s+=p.price; }
+  if(sel.t1out&&sel.t1in){ const o=myTeam.find(x=>x.id===sel.t1out),i=PLAYERS.find(x=>x.id===sel.t1in); if(o&&i) s+=(i.price-o.price); }
+  if(sel.t2out&&sel.t2in){ const o=myTeam.find(x=>x.id===sel.t2out),i=PLAYERS.find(x=>x.id===sel.t2in); if(o&&i) s+=(i.price-o.price); }
   return s;
 }
 function updateBudget(){
-  const spent=budgetSpent(),rem=INITIAL_BUDGET-spent;
+  const spent=budgetSpent(), rem=INITIAL_BUDGET-spent;
   document.getElementById('b-cost').textContent='-$'+spent.toFixed(1)+'m';
   const rv=document.getElementById('b-rem');
   rv.textContent='$'+rem.toFixed(1)+'m';
@@ -533,28 +656,30 @@ function updateBudget(){
   const bar=document.getElementById('b-bar');
   bar.style.width=Math.max(0,Math.min(100,(rem/INITIAL_BUDGET)*100))+'%';
   bar.style.background=rem<0?'#DA3633':rem<2?'#F0A500':'#2EA043';
-  const hb=document.getElementById('hdr-budget');
-  hb.textContent='$'+rem.toFixed(1)+'m';
-  hb.className='pill '+(rem<0?'red':rem<2?'gold':'green');
+  document.getElementById('hdr-budget').textContent='$'+rem.toFixed(1)+'m';
+  document.getElementById('hdr-budget').className='pill '+(rem<0?'red':rem<2?'gold':'green');
 }
 
-function notInTeam(p){return!myTeam.find(m=>m.name===p.name&&m.team===p.team);}
+/* ════ TRANSFER SLOTS ══════════════════════════════════════════════ */
+function notInTeam(p){ return !myTeam.find(m=>m.name===p.name&&m.team===p.team); }
 
-function fillSel(elId,players){
+function fillSel(elId, players){
   const el=document.getElementById(elId);
   const cur=el.value;
-  while(el.options.length>1)el.remove(1);
+  while(el.options.length>1) el.remove(1);
   players.forEach(p=>{
-    const fx=fix(p.team),pr=proj(p);
-    el.add(new Option(`${F[p.team]||''} ${p.name} (${TN[p.team]||p.team}) — $${p.price}m — ~${pr}pts vs ${TN[fx?.opp]||'?'}`,p.id));
+    const fx=fix(p.team), pr=proj(p);
+    const opt=new Option(`${F[p.team]||''} ${p.name} (${TN[p.team]||p.team}) — $${p.price}m — ~${pr}pts vs ${TN[fx?.opp]||'?'}`, p.id);
+    el.add(opt);
   });
-  if(cur)el.value=cur;
+  if(cur) el.value=cur;
 }
 
-function showPreview(elId,p){
+function showPreview(elId, p){
   const el=document.getElementById(elId);
-  if(!p){el.style.display='none';return;}
-  const fx=fix(p.team),pr=proj(p),cs=fx?csLabel[fx.cs]:'—';
+  if(!p){ el.style.display='none'; return; }
+  const fx=fix(p.team), pr=proj(p);
+  const cs=fx?csLabel[fx.cs]:'—';
   el.style.display='flex';
   el.innerHTML=`<span>${F[p.team]||''}</span><span class="pv-name">${p.name} · ${TN[p.team]||p.team}</span><span class="pv-price">$${p.price}m</span><span class="pv-pts">~${pr}pts</span><span class="pv-fix">vs ${TN[fx?.opp]||'?'} · ${fx?.date||''}</span>${(p.pos==='GK'||p.pos==='DEF')?`<span style="font-size:11px;color:#7D8590">CS:${cs}</span>`:''}`;
 }
@@ -562,7 +687,7 @@ function showPreview(elId,p){
 function pick(slot){
   const id=parseInt(document.getElementById('sel-'+slot).value);
   sel[slot]=isNaN(id)?null:id;
-  showPreview('prev-'+slot,id?PLAYERS.find(x=>x.id===id):null);
+  showPreview('prev-'+slot, id?PLAYERS.find(x=>x.id===id):null);
   updateBudget();
 }
 
@@ -570,11 +695,12 @@ function tactOut(i){
   const id=parseInt(document.getElementById(`sel-t${i}out`).value);
   sel[`t${i}out`]=isNaN(id)?null:id;
   const inSel=document.getElementById(`sel-t${i}in`);
-  if(!id||isNaN(id)){inSel.style.display='none';sel[`t${i}in`]=null;document.getElementById(`prev-t${i}`).style.display='none';updateBudget();return;}
+  if(!id||isNaN(id)){ inSel.style.display='none'; sel[`t${i}in`]=null; document.getElementById(`prev-t${i}`).style.display='none'; updateBudget(); return; }
   const out=myTeam.find(x=>x.id===id);
   const rem=INITIAL_BUDGET-budgetSpent();
-  const cands=PLAYERS.filter(p=>p.pos===out.pos&&p.price<=out.price+rem+0.01&&notInTeam(p)).sort((a,b)=>proj(b)-proj(a));
-  fillSel(`sel-t${i}in`,cands);
+  const maxP=out.price+rem;
+  const cands=PLAYERS.filter(p=>p.pos===out.pos&&p.price<=maxP+0.01&&notInTeam(p)).sort((a,b)=>proj(b)-proj(a));
+  fillSel(`sel-t${i}in`, cands);
   inSel.style.display='block';
   updateBudget();
 }
@@ -582,27 +708,29 @@ function tactOut(i){
 function tactIn(i){
   const id=parseInt(document.getElementById(`sel-t${i}in`).value);
   sel[`t${i}in`]=isNaN(id)?null:id;
-  showPreview(`prev-t${i}`,id?PLAYERS.find(x=>x.id===id):null);
+  showPreview(`prev-t${i}`, id?PLAYERS.find(x=>x.id===id):null);
   updateBudget();
 }
 
+/* ════ SUGGESTIONS ═════════════════════════════════════════════════ */
 function buildSugg(){
   const defs=PLAYERS.filter(p=>p.pos==='DEF'&&p.price<=11.0&&notInTeam(p)).map(p=>({...p,pr:proj(p)})).sort((a,b)=>b.pr-a.pr).slice(0,4);
   const mids=PLAYERS.filter(p=>p.pos==='MID'&&p.price<=11.0&&notInTeam(p)).map(p=>({...p,pr:proj(p)})).sort((a,b)=>b.pr-a.pr).slice(0,4);
   let h='';
-  [[defs,'Para substituir Brown (DEF)'],[mids,'Para substituir Nmecha (MID)']].forEach(([list,title])=>{
+  [[defs,'DEF','Para substituir Brown'],[mids,'MID','Para substituir Nmecha']].forEach(([list,pos,title])=>{
     h+=`<div style="margin-bottom:16px"><div style="font-size:12px;font-weight:600;color:#7D8590;margin-bottom:8px">${title}</div><div style="background:#161B22;border:1px solid #30363D;border-radius:10px;overflow:hidden">`;
     list.forEach((p,i)=>{
-      const fx=fix(p.team),cs=fx?csLabel[fx.cs]:'—',csc=fx?dcol[fx.cs]:'#7D8590';
-      const isDef=p.pos==='DEF'||p.pos==='GK';
-      h+=`<div style="display:flex;align-items:center;gap:10px;padding:11px 14px;${i<list.length-1?'border-bottom:1px solid #1C2128':''}${i===0?';border-left:3px solid #F0A500':''}">
-        <span style="font-size:20px">${F[p.team]||''}</span>
+      const fx=fix(p.team);
+      const cs=fx?csLabel[fx.cs]:'—';
+      const csc=fx?dcol[fx.cs]:'#7D8590';
+      h+=`<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;${i<list.length-1?'border-bottom:1px solid #1C2128':''}${i===0?';border-left:3px solid #F0A500':''}">
+        <span style="font-size:18px">${F[p.team]||''}</span>
         <div style="flex:1">
           <div style="font-weight:600;font-size:14px">${i===0?'⭐ ':''}${p.name}</div>
-          <div style="font-size:11px;color:#7D8590">${TN[p.team]} · vs ${TN[fx?.opp]||'?'} (${fx?.date||'?'}) · ${isDef?`CS <span style="color:${csc}">${cs}</span>`:`atk × ${[0,1.6,1.3,1.0,0.65,0.35][fx?.atk||3]}`}</div>
+          <div style="font-size:11px;color:#7D8590">${TN[p.team]||p.team} · vs ${TN[fx?.opp]||'?'} (${fx?.date||'?'}) · ${(pos==='DEF'||pos==='GK')?`CS: <span style="color:${csc}">${cs}</span>`:`atk × ${[0,1.6,1.3,1.0,0.65,0.35][fx?.atk||3]}`}</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:17px;font-weight:700;color:#2EA043">${p.pr}<span style="font-size:10px;color:#7D8590"> pts</span></div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:16px;font-weight:700;color:#2EA043">${p.pr}<span style="font-size:10px;color:#7D8590"> pts</span></div>
           <div style="font-size:12px;color:#F0A500">$${p.price}m</div>
         </div>
       </div>`;
@@ -612,6 +740,7 @@ function buildSugg(){
   document.getElementById('sugg').innerHTML=h;
 }
 
+/* ════ TEAM VIEW ════════════════════════════════════════════════════ */
 function renderTeam(){
   const starters=myTeam.filter(p=>!p.bench);
   const bench=myTeam.filter(p=>p.bench);
@@ -619,90 +748,115 @@ function renderTeam(){
   const defs=starters.filter(p=>p.pos==='DEF');
   const mids=starters.filter(p=>p.pos==='MID');
   const fwds=starters.filter(p=>p.pos==='FWD');
+
   function card(p){
-    const fx=fix(p.team),pr=proj(p),fl=p.team==='ALE'?'🇩🇪':(F[p.team]||'🏳️');
-    let b='';
-    if(p.cap)b+=`<span class="pbadge c">C</span>`;
-    if(p.vc) b+=`<span class="pbadge vc">VC</span>`;
-    if(p.elim)b+=`<span class="pbadge el">ELIM</span>`;
-    return `<div class="pcard${p.elim?' elim':p.cap?' cap':p.vc?' vc':''}">${b}<div class="pflag">${fl}</div><div class="pname">${p.name}</div><div class="ppts">${p.elim?'☠️':p.r32pts+'pts'}</div><div class="pfix">${p.elim?'Eliminado':fx?'vs '+fx.opp:''}</div></div>`;
+    const fx=fix(p.team), pr=proj(p);
+    const flag=p.team==='ALE'?'🇩🇪':(F[p.team]||'🏳️');
+    let badges='';
+    if(p.cap)  badges+=`<span class="pbadge c">C</span>`;
+    if(p.vc)   badges+=`<span class="pbadge vc">VC</span>`;
+    if(p.elim) badges+=`<span class="pbadge el">ELIM</span>`;
+    return `<div class="pcard${p.elim?' elim':p.cap?' cap':p.vc?' vc':''}">
+      ${badges}
+      <div class="pflag">${flag}</div>
+      <div class="pname">${p.name}</div>
+      <div class="ppts">${p.elim?'☠️':p.r32pts+'pts'}</div>
+      <div class="pfix">${p.elim?'Eliminado':fx?'vs '+fx.opp:''}</div>
+    </div>`;
   }
+
   const totalR32=myTeam.filter(p=>!p.bench).reduce((s,p)=>s+p.r32pts,0);
   const totalProj=starters.filter(p=>!p.elim).reduce((s,p)=>s+proj(p),0);
   document.getElementById('ts-r32').textContent=totalR32+' pts';
   document.getElementById('ts-proj').textContent=Math.round(totalProj)+' pts';
+
   document.getElementById('formation').innerHTML=`
     <div class="frow">${gks.map(card).join('')}</div>
     <div class="frow">${defs.map(card).join('')}</div>
     <div class="frow">${mids.map(card).join('')}</div>
     <div class="frow">${fwds.map(card).join('')}</div>
-    <div class="bench-wrap"><div class="bench-label">Banco</div><div class="bench-row">${bench.map(card).join('')}</div></div>`;
+    <div class="bench-wrap">
+      <div class="bench-label">Banco</div>
+      <div class="bench-row">${bench.map(card).join('')}</div>
+    </div>`;
 }
 
+/* ════ PLAYERS TABLE ════════════════════════════════════════════════ */
 function renderPTable(){
   const q=document.getElementById('fsearch').value.toLowerCase();
   const pos=document.getElementById('fpos').value;
   const sort=document.getElementById('fsort').value;
   let data=PLAYERS.map(p=>({...p,pr:proj(p)}));
-  if(q)data=data.filter(p=>p.name.toLowerCase().includes(q)||(TN[p.team]||'').toLowerCase().includes(q));
-  if(pos)data=data.filter(p=>p.pos===pos);
-  if(sort==='proj')data.sort((a,b)=>b.pr-a.pr);
-  else if(sort==='price_d')data.sort((a,b)=>b.price-a.price);
-  else if(sort==='price_a')data.sort((a,b)=>a.price-b.price);
-  else if(sort==='goals')data.sort((a,b)=>b.goals-a.goals);
+  if(q) data=data.filter(p=>p.name.toLowerCase().includes(q)||(TN[p.team]||'').toLowerCase().includes(q));
+  if(pos) data=data.filter(p=>p.pos===pos);
+  if(sort==='proj') data.sort((a,b)=>b.pr-a.pr);
+  else if(sort==='price_d') data.sort((a,b)=>b.price-a.price);
+  else if(sort==='price_a') data.sort((a,b)=>a.price-b.price);
+  else if(sort==='goals') data.sort((a,b)=>b.goals-a.goals);
   const inT=p=>myTeam.find(m=>m.name===p.name&&m.team===p.team);
   document.getElementById('ptbody').innerHTML=data.map(p=>{
-    const fx=fix(p.team),it=inT(p);
+    const fx=fix(p.team);
+    const it=inT(p);
     return `<tr class="${it?'inteam':''}">
       <td><span style="margin-right:4px">${F[p.team]||'🏳️'}</span>${p.name}${it?'<span style="font-size:9px;background:rgba(46,160,67,.2);color:#56d364;padding:1px 4px;border-radius:3px;margin-left:4px;font-weight:700">✓</span>':''}</td>
       <td><span class="pos ${p.pos}">${p.pos}</span></td>
-      <td>$${p.price}m</td><td>${p.goals}</td><td>${p.assists}</td><td>${p.cs}</td>
-      <td style="font-size:12px">${F[fx?.opp]||''} ${TN[fx?.opp]||'?'}<br><span style="color:${dcol[fx?.cs||3]};font-size:10px">CS:${csLabel[fx?.cs||3]}</span></td>
+      <td style="font-variant-numeric:tabular-nums">$${p.price}m</td>
+      <td>${p.goals}</td><td>${p.assists}</td><td>${p.cs}</td>
+      <td style="font-size:12px">${F[fx?.opp]||''} ${TN[fx?.opp]||'?'}<br><span style="color:${dcol[fx?.cs||3]};font-size:10px">CS: ${csLabel[fx?.cs||3]}</span></td>
       <td class="proj">${p.pr}</td>
     </tr>`;
   }).join('');
 }
 
+/* ════ FIXTURES VIEW ════════════════════════════════════════════════ */
 function renderFix(){
   document.getElementById('fix-list').innerHTML=FIXTURES.map(f=>{
-    const mine=myTeam.filter(p=>p.team===f.t1||p.team===f.t2),has=mine.length>0;
-    function dots(d){return Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${i<d?dcol[d]:'#30363D'};margin-right:2px"></span>`).join('');}
+    const mine=myTeam.filter(p=>p.team===f.t1||p.team===f.t2);
+    const has=mine.length>0;
+    function dots(d){ return Array.from({length:5},(_,i)=>`<span class="diff-dot" style="background:${i<d?dcol[d]:'#30363D'}"></span>`).join(''); }
     return `<div style="background:#161B22;border:1px solid #30363D;border-radius:10px;padding:12px 14px;margin-bottom:8px;${has?'border-left:3px solid #F0A500':''}">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="flex:1;font-weight:600;font-size:14px">${F[f.t1]||''} ${TN[f.t1]} <span style="color:#484F58;font-size:12px;font-weight:400">vs</span> ${F[f.t2]||''} ${TN[f.t2]}</div>
-        <div style="font-size:12px;color:#7D8590">${f.date}</div>
+        <div style="font-size:12px;color:#7D8590;white-space:nowrap">${f.date}</div>
       </div>
       <div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:#7D8590">
-        <div>${F[f.t1]} CS: ${dots(f.cs1)} ${csLabel[f.cs1]}</div>
-        <div>${F[f.t2]} CS: ${dots(f.cs2)} ${csLabel[f.cs2]}</div>
+        <div>${F[f.t1]} CS: <span class="diff-bar">${dots(f.cs1)}</span> ${csLabel[f.cs1]}</div>
+        <div>${F[f.t2]} CS: <span class="diff-bar">${dots(f.cs2)}</span> ${csLabel[f.cs2]}</div>
       </div>
       ${has?`<div style="margin-top:6px;font-size:12px;color:#F0A500">${mine.map(p=>p.name).join(' · ')}</div>`:''}
     </div>`;
   }).join('');
 }
 
+/* ════ TABS ═════════════════════════════════════════════════════════ */
 function showTab(name){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.querySelector(`[onclick="showTab('${name}')"]`).classList.add('on');
   document.getElementById('pane-'+name).classList.add('on');
-  if(name==='team')renderTeam();
-  if(name==='players')renderPTable();
-  if(name==='fixtures')renderFix();
+  if(name==='team')    renderTeam();
+  if(name==='players') renderPTable();
+  if(name==='fixtures') renderFix();
 }
 
+/* ════ INIT ═════════════════════════════════════════════════════════ */
 (function init(){
+  // Preencher selects obrigatórios
   const defs=PLAYERS.filter(p=>p.pos==='DEF'&&p.price<=11.0&&notInTeam(p)).sort((a,b)=>proj(b)-proj(a));
   const mids=PLAYERS.filter(p=>p.pos==='MID'&&p.price<=11.0&&notInTeam(p)).sort((a,b)=>proj(b)-proj(a));
-  fillSel('sel-brown',defs);
-  fillSel('sel-nmecha',mids);
+  fillSel('sel-brown', defs);
+  fillSel('sel-nmecha', mids);
+
+  // Preencher selects táticos (out)
+  const active=myTeam.filter(p=>!p.elim);
   [1,2].forEach(i=>{
     const el=document.getElementById(`sel-t${i}out`);
-    myTeam.filter(p=>!p.elim).forEach(p=>{
-      const fx=fix(p.team),pr=proj(p);
-      el.add(new Option(`${F[p.team]||''} ${p.name} (${p.pos} · $${p.price}m · ~${pr}pts) vs ${TN[fx?.opp]||'?'}`,p.id));
+    active.forEach(p=>{
+      const fx=fix(p.team), pr=proj(p);
+      el.add(new Option(`${F[p.team]||''} ${p.name} (${p.pos} · $${p.price}m · ~${pr}pts) vs ${TN[fx?.opp]||'?'}`, p.id));
     });
   });
+
   buildSugg();
   updateBudget();
 })();
